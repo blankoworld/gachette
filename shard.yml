@@ -1,0 +1,18 @@
+name: gachette
+version: 0.1.0
+
+authors:
+  - Olivier DOSSMANN <git@dossmann.net>
+
+targets:
+  gachette:
+    main: src/gachette.cr
+
+crystal: 0.27.2
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+    version: 0.25.2
+
+license: MIT

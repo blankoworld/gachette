@@ -1,0 +1,14 @@
+# À faire
+
+* Tests (dossier spec) qui contient un exemple de fichier JSON pour CHAQUE type de webhook qu'on pourrait recevoir
+  * github
+  * gitlab
+  * gitea
+* Fichier d'exemple pour lancer le service sous Alpine
+* Fichier d'exemple pour lancer le service à l'aide de systemd
+* Fichier de configuration du service
+  * JSON ?
+  * TOML ?
+* Fonctionnalité : détecter si c'est un fichier github/gitlab/gitea
+* Fonctionnalité : récupérer le nom du projet
+* Fonctionnalité : proposer un système pour vérifier le mot de passe
