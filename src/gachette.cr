@@ -2,23 +2,26 @@
 require "kemal"
 require "json"
 
+# Homepage
 get "/" do
   "J'ai la gachette facile !"
 end
 
+# payload process
 post "/" do |env|
-  result = "Message reçu."
+  result = "Message reçu : "
   head = env.request.headers
   agent = head.fetch("User-Agent", "None")
   if agent == "GiteaServer" && head.has_key?("X-Gitea-Event")
-    result += "\ndemande Gitea"
+    result += "type Gitea"
   elsif agent.starts_with?("GitHub-Hookshot/") && head.has_key?("X-Github-Event")
-    result += "\ndemande Github"
+    result += "type Github"
   elsif head.has_key?("X-Gitlab-Event")
-    result += "\ndemande Gitlab"
+    result += "type Gitlab"
   else
-    result += "\ndemande inconnue"
+    result += "type inconnu (agent >#{agent}<, headers >#{head}<)"
   end
+  log(result)
   result
 end
 
