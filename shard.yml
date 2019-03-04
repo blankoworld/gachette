@@ -14,5 +14,8 @@ dependencies:
   kemal:
     github: kemalcr/kemal
     version: 0.25.2
+  spec-kemal:
+    github: kemalcr/spec-kemal
+    version: 0.5.0
 
 license: MIT

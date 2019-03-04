@@ -18,6 +18,16 @@ TODO: Write usage instructions here
   * [Gitlab examples](https://docs.gitlab.com/ee/user/project/integrations/webhooks.html#push-events)
   * [Gitea examples](https://docs.gitea.io/en-us/webhooks/)
   * [Other examples](https://github.com/adnanh/webhook/blob/master/docs/Hook-Examples.md)
+
+### Tests
+
+Pretty testing can be launched via these commands:
+
+```bash
+shards install
+KEMAL_ENV=test crystal spec
+```
+
 ## Contributing
 
 1. Fork it (<https://github.com/blankoworld/gachette/fork>)
