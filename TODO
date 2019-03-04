@@ -1,9 +1,7 @@
 # À faire
 
-* Tests (dossier spec) qui contient un exemple de fichier JSON pour CHAQUE type de webhook qu'on pourrait recevoir
-  * github
-  * gitlab
-  * gitea
+* Tests pour l'envoi de demandes JSON au serveur Kemal
+* Utiliser "log" pour faire des log.info sur la détection github/gitlab/gitea
 * Fichier d'exemple pour lancer le service sous Alpine
 * Fichier d'exemple pour lancer le service à l'aide de systemd
 * Fichier de configuration du service
