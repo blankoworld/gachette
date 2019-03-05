@@ -5,4 +5,7 @@ bin:
 	mkdir -p bin
 
 clean:
-	rm -rf bin
+	rm -rf bin docs
+
+doc docs:
+	crystal docs
