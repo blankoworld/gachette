@@ -9,19 +9,31 @@ require "./gitlab.cr"
 # Gachette is a **webhook service for Gitlab, Github and Gitea** to launch
 # specific commands on specific repositories.
 class Gachette
-  def self. gitea(req)
-    payload = Gitea.from_json(req.body.not_nil!)
-    log("#{payload.repository.full_name} gitea repository")
+end
+
+# `Payload` content is what the remote hook server gives us.
+# It describes data we could use to find which command we should use.
+# For example *project* is the project name(space).
+class Payload
+  def initialize(kind : String, req : HTTP::Request)
+    @project = "unknown"
+    case kind
+      when "gitea"
+        gitea = Gitea.from_json(req.body.not_nil!)
+        @project = gitea.repository.full_name
+      when "github"
+        github = Github.from_json(req.body.not_nil!)
+        @project =  github.repository.full_name
+      when "gitlab"
+        gitlab = Gitlab.from_json(req.body.not_nil!)
+        @project = gitlab.project.path_with_namespace
+    end
+
+    log("#{self.project} repository")
   end
 
-  def self. github(req)
-    payload = Github.from_json(req.body.not_nil!)
-    log("#{payload.repository.full_name} github repository")
-  end
-
-  def self. gitlab(req)
-    payload = Gitlab.from_json(req.body.not_nil!)
-    log("#{payload.project.path_with_namespace} gitlab repository")
+  def project
+    @project
   end
 end
 
@@ -35,7 +47,7 @@ end
 # 1/ check which kind of payload we receive among "gitlab, gitea, github, nil"
 # 2/ launch specific process
 post "/" do |env|
-  kind = payload_type(env.request.headers)
+  kind = request_type(env.request.headers)
 
   # Stop process if no kind found
   if !kind
@@ -45,11 +57,7 @@ post "/" do |env|
 
   log("#{kind} payload received")
 
-  case kind
-  when "gitea" then Gachette.gitea(env.request)
-  when "github" then Gachette.github(env.request)
-  when "gitlab" then Gachette.gitlab(env.request)
-  end
+  payload = Payload.new kind, env.request
 
   kind
 end
