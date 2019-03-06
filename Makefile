@@ -9,3 +9,6 @@ clean:
 
 doc docs:
 	crystal docs
+
+test tests:
+	KEMAL_ENV=test crystal spec
