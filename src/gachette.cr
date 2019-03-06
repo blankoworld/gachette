@@ -28,10 +28,9 @@ class Payload
         gitlab = Gitlab.from_json(req.body.not_nil!)
         @project = gitlab.project.path_with_namespace
     end
-
-    log("#{self.project} repository")
   end
 
+  # namespace of given project. Example: blankoworld/gachette
   def project
     @project
   end
@@ -47,17 +46,16 @@ end
 # 1/ check which kind of payload we receive among "gitlab, gitea, github, nil"
 # 2/ launch specific process
 post "/" do |env|
-  kind = request_type(env.request.headers)
 
+  kind = request_type(env.request.headers)
   # Stop process if no kind found
   if !kind
     log("unknown payload received")
     next
   end
 
-  log("#{kind} payload received")
-
-  payload = Payload.new kind, env.request
+  payload = Payload.new kind, env.request  
+  log("#{kind} payload received: #{payload.project}")
 
   kind
 end
