@@ -66,13 +66,13 @@ class Payload
     @project = "unknown"
     case kind
       when "gitea"
-        gitea = Gitea.from_json(req.body.not_nil!)
+        gitea = Gitea::Payload.from_json(req.body.not_nil!)
         @project = gitea.repository.full_name
       when "github"
-        github = Github.from_json(req.body.not_nil!)
+        github = Github::Payload.from_json(req.body.not_nil!)
         @project =  github.repository.full_name
       when "gitlab"
-        gitlab = Gitlab.from_json(req.body.not_nil!)
+        gitlab = Gitlab::Payload.from_json(req.body.not_nil!)
         @project = gitlab.project.path_with_namespace
     end
   end

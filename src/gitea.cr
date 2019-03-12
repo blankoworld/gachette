@@ -1,12 +1,12 @@
 require "json"
 
-class Repository
+class Gitea::Repository
   JSON.mapping(
     full_name: String,
   )
 end
 
-class Gitea
+class Gitea::Payload
   JSON.mapping(
     repository: {type: Repository, nilable: false},
   )

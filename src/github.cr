@@ -1,12 +1,12 @@
 require "json"
 
-class Repository
+class Github::Repository
   JSON.mapping(
     full_name: String,
   )
 end
 
-class Github
+class Github::Payload
   JSON.mapping(
     repository: {type: Repository, nilable: false},
   )
