@@ -110,7 +110,16 @@ end
 # Start service as Kemal one
 # First check mandatories options
 Kemal.run do |config|
+  # miscellaneous initialization
   secretkey = ENV["GACHETTE_KEY"] if ENV.has_key?("GACHETTE_KEY")
+  if kemal_env = ENV["KEMAL_ENV"]?
+      if kemal_env == "test"
+        kind = "github"
+        namespace = "blankoworld/gachette"
+        command = "echo \"Testing env. with github:blankoworld/gachette\""
+    end
+  end
+
   # mandatories options
   if !kind
     puts "kind option missing!"
