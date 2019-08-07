@@ -77,7 +77,7 @@ Kemal.run do |config|
     puts "kind option missing!"
     exit(1)
   elsif !ALLOWED_KINDS.includes?(config.kind)
-    puts "`#{config.kind}` kind is not allowed! Use on of: #{ALLOWED_KINDS}"
+    puts "`#{config.kind}` kind is not allowed! Use one of: #{ALLOWED_KINDS}"
     exit (1)
   end
   if !config.namespace
