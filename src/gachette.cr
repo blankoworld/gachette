@@ -45,7 +45,15 @@ end
 #
 # 1/ check which kind of payload we receive among "gitlab, gitea, github, nil"
 # 2/ launch specific process
+# 3/ show result
 post "/" do |env|
+
+  # TODO:
+  # - test that it's the right project
+  # - test that script exists
+  # - test that kind is same as given request (request_type function)
+  # - check if secret key is OK (if given)
+  # - check where to go (directory)
 
   # Stop process if no kind found
   if !Kemal.config.kind
@@ -53,10 +61,36 @@ post "/" do |env|
     next
   end
 
+  # 1/ Check payload
   payload = Payload.new Kemal.config.kind, env.request  
   log("#{Kemal.config.kind} payload received: #{payload.project}")
 
-  Kemal.config.kind
+  # 2/a) Prepare command
+  command = nil
+  args = [] of String
+  if Kemal.config.scriptfile
+    log("Script: #{Kemal.config.scriptfile}")
+    command = "sh"
+    args << "-c" << Kemal.config.scriptfile.to_s
+  else
+    log("Launch command: #{Kemal.config.command}")
+    command = Kemal.config.command.to_s
+
+  end
+
+  # 2/b) Execute it
+  pwd = Process::INITIAL_PWD
+  if args.size > 0
+    status = Process.run command: command, args: args, shell: true, error: STDERR, output: STDOUT, chdir: pwd
+  else
+    status = Process.run command: command, shell: true, error: STDERR, output: STDOUT, chdir: pwd
+  end
+
+  # 3/ Show result
+  result = status.success? ? "SUCCESS" : "FAILURE"
+  log("Result: #{result}")
+
+  result
 end
 
 # Start service as Kemal one
@@ -75,7 +109,7 @@ Kemal.run do |config|
   # mandatories options
   if !config.kind
     puts "kind option missing!"
-    exit(1)
+    exit (1)
   elsif !ALLOWED_KINDS.includes?(config.kind)
     puts "`#{config.kind}` kind is not allowed! Use one of: #{ALLOWED_KINDS}"
     exit (1)
