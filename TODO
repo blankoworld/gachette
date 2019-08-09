@@ -8,12 +8,11 @@
   * JSON ?
   * TOML ?
 * Fonctionnalité : détecter si c'est un fichier github/gitlab/gitea
-* Fonctionnalité : récupérer le nom du projet
 * Fonctionnalité : proposer un système pour vérifier le mot de passe
 * Faire une page d'accueil pour le "GET" (même page que celle que j'utilise pour mon service de webhook)
 * Ajouter un titre personnalisé et une description personnalisée récupérée dans le fichier de configuration de l'outil
 * Mettre kemal dans un module Gachette
-* User-Agent de Kemal en "Gachette"
+* User-Agent de Kemal en "Gachette" (pour avoir X-Powered-By à "Gachette")
 
 # Améliorations
 
