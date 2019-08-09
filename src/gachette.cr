@@ -63,28 +63,31 @@ end
 post "/" do |env|
   payload = Payload.new env.request
 
+  log(line("="))
+
   # TODO:
   # - check if secret key is OK (if given)
   # - check where to go (directory)
 
   # Stop process if no kind found
   if !Kemal.config.kind
-    log("error: unknown kind of payload received")
+    kinds = ALLOWED_KINDS.join(separator = " ")
+    log("ERROR: kind unknown: '#{Kemal.config.kind}'. Allowed: #{kinds}")
     next
   end
 
   # Check payload
   if payload.kind != Kemal.config.kind.to_s
-    log("error: payload kind (#{payload.kind}) is different from: #{Kemal.config.kind}")
+    log("ERROR: payload is '#{payload.kind}'. Expected: '#{Kemal.config.kind}'.")
     next
   end
 
   if payload.project != Kemal.config.namespace.to_s
-    log("error: payload project (#{payload.project}) didn't match with: #{Kemal.config.namespace}")
+    log("ERROR: project is '#{payload.project}'. Expected: '#{Kemal.config.namespace}'")
     next
   end
 
-  log("#{Kemal.config.kind} payload received. Project: #{payload.project}")
+  log("[#{payload.project}]: payload received!")
 
   # Process request
   pwd = Process::INITIAL_PWD
@@ -92,11 +95,11 @@ post "/" do |env|
   args = [] of String
 
   if Kemal.config.scriptfile
-    log("Script: #{Kemal.config.scriptfile}")
+    log("SCRIPT: #{Kemal.config.scriptfile}")
     command = "sh"
     args << "-c" << Kemal.config.scriptfile.to_s
   else
-    log("Launch command: #{Kemal.config.command}")
+    log("COMMAND: #{Kemal.config.command}")
     command = Kemal.config.command.to_s
   end
 
@@ -108,7 +111,9 @@ post "/" do |env|
 
   # 3/ Show result
   result = status.success? ? "SUCCESS" : "FAILURE"
-  log("Result: #{result}")
+  log("RESULT: #{result}")
+
+  log(line("="))
 
   # TODO: send result as JSON
   result

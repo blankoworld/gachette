@@ -11,3 +11,8 @@ def request_type(headers : HTTP::Headers)
   end
   result
 end
+
+# Return 80 times the given String
+def line(s : String)
+  "#{s*80}"
+end
