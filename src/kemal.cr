@@ -39,7 +39,7 @@ Example: gachette -k github -n blankoworld/gachette -f script.sh"
 
   # file: script that content some commands to run for the given namespace
   parser.on("-f name", "--file name", "Script to run") do |name|
-    unless Dir.exists? name
+    unless File.exists? name
       abort "#{name} file does not exist!"
     end
     config.scriptfile = name

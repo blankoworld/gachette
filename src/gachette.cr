@@ -15,9 +15,13 @@ ALLOWED_KINDS = ["gitea", "github", "gitlab"]
 # It describes data we could use to find which command we should use.
 # For example *project* is the project name(space).
 class Payload
-  def initialize(kind : (String | Nil), req : HTTP::Request)
-    @project = "unknown"
-    case kind
+  @kind : String
+  @project : String = "unknown"
+  def initialize(req : HTTP::Request)
+    # request kind
+    request_kind = request_type(req.headers).to_s
+    @kind = request_kind == "" ? "unknown" : request_kind
+    case @kind
       when "gitea"
         gitea = Gitea::Payload.from_json(req.body.not_nil!)
         @project = gitea.repository.full_name
@@ -34,6 +38,11 @@ class Payload
   def project
     @project
   end
+
+  # kind of payload.
+  def kind
+    @kind
+  end
 end
 
 # Homepage: display simple service homepage
@@ -43,31 +52,45 @@ end
 
 # payload process:
 #
-# 1/ check which kind of payload we receive among "gitlab, gitea, github, nil"
-# 2/ launch specific process
-# 3/ show result
+# 1/ load request in Payload
+# 2/ if the payload is the same as expected: process the request
+#   For the payload to be the same, there's some criteria:
+#    - kind is the same
+#    - project is the same as expected
+#    - the given secret key is similar
+# 3/ request processing: either launch a scriptfile or a command
+# 4/ show result
 post "/" do |env|
+  payload = Payload.new env.request
 
   # TODO:
-  # - test that it's the right project
-  # - test that script exists
-  # - test that kind is same as given request (request_type function)
   # - check if secret key is OK (if given)
   # - check where to go (directory)
 
   # Stop process if no kind found
   if !Kemal.config.kind
-    log("unknown kind of payload received")
+    log("error: unknown kind of payload received")
     next
   end
 
-  # 1/ Check payload
-  payload = Payload.new Kemal.config.kind, env.request  
-  log("#{Kemal.config.kind} payload received: #{payload.project}")
+  # Check payload
+  if payload.kind != Kemal.config.kind.to_s
+    log("error: payload kind (#{payload.kind}) is different from: #{Kemal.config.kind}")
+    next
+  end
 
-  # 2/a) Prepare command
+  if payload.project != Kemal.config.namespace.to_s
+    log("error: payload project (#{payload.project}) didn't match with: #{Kemal.config.namespace}")
+    next
+  end
+
+  log("#{Kemal.config.kind} payload received. Project: #{payload.project}")
+
+  # Process request
+  pwd = Process::INITIAL_PWD
   command = nil
   args = [] of String
+
   if Kemal.config.scriptfile
     log("Script: #{Kemal.config.scriptfile}")
     command = "sh"
@@ -75,11 +98,8 @@ post "/" do |env|
   else
     log("Launch command: #{Kemal.config.command}")
     command = Kemal.config.command.to_s
-
   end
 
-  # 2/b) Execute it
-  pwd = Process::INITIAL_PWD
   if args.size > 0
     status = Process.run command: command, args: args, shell: true, error: STDERR, output: STDOUT, chdir: pwd
   else
@@ -90,11 +110,12 @@ post "/" do |env|
   result = status.success? ? "SUCCESS" : "FAILURE"
   log("Result: #{result}")
 
+  # TODO: send result as JSON
   result
 end
 
 # Start service as Kemal one
-# First check mandatories options
+# After having checked mandatories options
 Kemal.run do |config|
   # miscellaneous initialization
   config.secretkey = ENV["GACHETTE_KEY"] if ENV.has_key?("GACHETTE_KEY")
@@ -114,10 +135,12 @@ Kemal.run do |config|
     puts "`#{config.kind}` kind is not allowed! Use one of: #{ALLOWED_KINDS}"
     exit (1)
   end
+
   if !config.namespace
     puts "name option is missing!"
     exit (1)
   end
+
   if !config.command && !config.scriptfile
     puts "need something to run! Either a command or a scriptfile."
     exit (1)
