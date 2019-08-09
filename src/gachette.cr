@@ -83,7 +83,7 @@ post "/" do |env|
   end
 
   if payload.project != Kemal.config.namespace.to_s
-    log("ERROR: project is '#{payload.project}'. Expected: '#{Kemal.config.namespace}'")
+    log("ERROR: user namespace is '#{payload.project}'. Expected: '#{Kemal.config.namespace}'")
     next
   end
 

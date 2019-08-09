@@ -28,7 +28,7 @@ Example: gachette -k github -n blankoworld/gachette -f script.sh"
   end
 
   # namespace from which you will receive the payload
-  parser.on("-n name", "--name name", "User's namespace. Ex. olivier/gachette") do |name|
+  parser.on("-n name", "--name name", "User namespace. Ex. olivier/gachette") do |name|
     config.namespace = name
   end
 
