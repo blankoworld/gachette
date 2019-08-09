@@ -4,11 +4,32 @@ Webhook server for Gitlab, Github and Gitea to run arbitrary commands.
 
 ## Installation
 
-TODO: Write installation instructions here
+You need to create the binary like this:
+
+```bash
+shards install
+make
+```
+
+As a result, the executable `bin/gachette` will appear.
 
 ## Usage
 
-TODO: Write usage instructions here
+Launch the `bin/gachette` binary:
+
+```bash
+KEMAL_ENV=production gachette -p 3030 -k github -n blankoworld/gachette -c "ls /"
+```
+
+Which means:
+
+  * you run in **production** mode
+  * port: **3030**
+  * you accept webhooks formed as **github** one
+  * user namespace is **blankoworld/gachette**
+  * each time you receive the well-formed request you launch a command: **ls /**
+
+That's all!
 
 ## Development
 
