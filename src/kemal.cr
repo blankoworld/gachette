@@ -7,7 +7,7 @@ class Kemal::Config
   @namespace : String = "blankoworld/gachette"
   @command : (String)?
   @scriptfile : (String)?
-  @secretkey : (String)?
+  @secretkey : String = ""
 
   property kind, namespace, command, scriptfile, secretkey
 

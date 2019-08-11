@@ -9,5 +9,6 @@ end
 class Gitea::Payload
   JSON.mapping(
     repository: {type: Repository, nilable: false},
+    secret: String,
   )
 end

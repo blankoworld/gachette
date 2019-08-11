@@ -4,6 +4,8 @@ require "./gachette/helpers/*"
 require "./gitea.cr"
 require "./github.cr"
 require "./gitlab.cr"
+require "openssl/hmac"
+require "openssl/sha1"
 
 # Gachette is a **webhook service for Gitlab, Github and Gitea** to launch
 # specific commands on specific repositories.
@@ -13,10 +15,14 @@ ALLOWED_KINDS = ["gitea", "github", "gitlab"]
 
 # `Payload` content is what the remote hook server gives us.
 # It describes data we could use to find which command we should use.
-# For example *project* is the project name(space).
+# Properties:
+# - kind:     payload type. For an example: gitea, github or gitlab
+# - project:  project name(space).
+# - secret:   shared secret to check you're allowed to launch the command/script
 class Payload
   @kind : String
   @project : String = "unknown"
+  @secret : String = ""
   def initialize(req : HTTP::Request)
     # request kind
     request_kind = request_type(req.headers).to_s
@@ -25,12 +31,21 @@ class Payload
       when "gitea"
         gitea = Gitea::Payload.from_json(req.body.not_nil!)
         @project = gitea.repository.full_name
+        @secret = gitea.secret
       when "github"
         github = Github::Payload.from_json(req.body.not_nil!)
         @project =  github.repository.full_name
+        hash = req.headers.fetch("X-Hub-Signature", "None")
+        if hash != "None"
+          @secret = hash.to_s
+        end
       when "gitlab"
         gitlab = Gitlab::Payload.from_json(req.body.not_nil!)
         @project = gitlab.project.path_with_namespace
+        token = req.headers.fetch("X-Gitlab-Token", "None")
+        if token != "None"
+          @secret = token.to_s
+        end
     end
   end
 
@@ -42,6 +57,11 @@ class Payload
   # kind of payload.
   def kind
     @kind
+  end
+
+  # special secret from project
+  def secret
+    @secret
   end
 end
 
@@ -66,7 +86,6 @@ post "/" do |env|
   log(line("="))
 
   # TODO:
-  # - check if secret key is OK (if given)
   # - check where to go (directory)
 
   # Stop process if no kind found
@@ -88,6 +107,16 @@ post "/" do |env|
   end
 
   log("[#{payload.project}]: payload received!")
+
+  # Check secret
+  given_secret = Kemal.config.secretkey
+  if payload.kind == "github"
+    given_secret = "sha1=" + OpenSSL::HMAC.hexdigest(:sha1, Kemal.config.secretkey, env.request.body.to_s)
+  end
+  if payload.secret != given_secret
+    log("ERROR: secret is '#{payload.secret}'. Expected: '#{given_secret}'")
+    next
+  end
 
   # Process request
   pwd = Process::INITIAL_PWD
@@ -124,12 +153,19 @@ end
 Kemal.run do |config|
   # miscellaneous initialization
   config.secretkey = ENV["GACHETTE_KEY"] if ENV.has_key?("GACHETTE_KEY")
+
   if kemal_env = ENV["KEMAL_ENV"]?
       if kemal_env == "test"
         config.kind = "github"
         config.namespace = "blankoworld/gachette"
         config.command = "echo \"Testing env. with github:blankoworld/gachette\""
     end
+  end
+
+  # secret key is mandatory!
+  if !config.secretkey || config.secretkey == ""
+    puts "GACHETTE_KEY environment variable is mandatory!"
+    exit (1)
   end
 
   # mandatories options
