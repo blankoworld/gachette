@@ -159,6 +159,7 @@ Kemal.run do |config|
         config.kind = "github"
         config.namespace = "blankoworld/gachette"
         config.command = "echo \"Testing env. with github:blankoworld/gachette\""
+        config.secretkey = "mot2passe"
     end
   end
 
