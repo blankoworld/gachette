@@ -49,6 +49,27 @@ shards install
 KEMAL_ENV=test crystal spec
 ```
 
+OR:
+
+```bash
+shards install
+make test
+```
+
+### Documentation
+
+As for Crystal language, just generate the documentation like this:
+
+```
+crystal docs
+```
+
+OR:
+
+```
+make doc
+```
+
 ## Contributing
 
 1. Fork it (<https://github.com/blankoworld/gachette/fork>)
