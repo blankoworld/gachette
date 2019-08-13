@@ -102,11 +102,11 @@ Kemal.run do |config|
   config.secretkey = ENV["GACHETTE_KEY"] if ENV.has_key?("GACHETTE_KEY")
 
   if kemal_env = ENV["KEMAL_ENV"]?
-      if kemal_env == "test"
-        config.kind = "github"
-        config.namespace = "blankoworld/gachette"
-        config.command = "echo \"Testing env. with github:blankoworld/gachette\""
-        config.secretkey = "mot2passe"
+    if kemal_env == "test"
+      config.kind = "github"
+      config.namespace = "blankoworld/gachette"
+      config.command = "echo \"Testing env. with github:blankoworld/gachette\""
+      config.secretkey = "mot2passe"
     end
   end
 

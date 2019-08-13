@@ -14,6 +14,7 @@ class Payload
   @project : String = "unknown"
   @secret : String = ""
   @content : String
+
   def initialize(req : HTTP::Request)
     # request kind
     request_kind = request_type(req.headers).to_s
@@ -21,24 +22,24 @@ class Payload
     # content
     @content = req.body.not_nil!.gets_to_end.to_s
     case @kind
-      when "gitea"
-        gitea = Gitea::Payload.from_json(@content)
-        @project = gitea.repository.full_name
-        @secret = gitea.secret
-      when "github"
-        github = Github::Payload.from_json(@content)
-        @project =  github.repository.full_name
-        hash = req.headers.fetch("X-Hub-Signature", "None")
-        if hash != "None"
-          @secret = hash.to_s
-        end
-      when "gitlab"
-        gitlab = Gitlab::Payload.from_json(@content)
-        @project = gitlab.project.path_with_namespace
-        token = req.headers.fetch("X-Gitlab-Token", "None")
-        if token != "None"
-          @secret = token.to_s
-        end
+    when "gitea"
+      gitea = Gitea::Payload.from_json(@content)
+      @project = gitea.repository.full_name
+      @secret = gitea.secret
+    when "github"
+      github = Github::Payload.from_json(@content)
+      @project = github.repository.full_name
+      hash = req.headers.fetch("X-Hub-Signature", "None")
+      if hash != "None"
+        @secret = hash.to_s
+      end
+    when "gitlab"
+      gitlab = Gitlab::Payload.from_json(@content)
+      @project = gitlab.project.path_with_namespace
+      token = req.headers.fetch("X-Gitlab-Token", "None")
+      if token != "None"
+        @secret = token.to_s
+      end
     end
   end
 

@@ -21,7 +21,7 @@ describe "Config" do
     conf.scriptfile = "./my_script.sh"
     conf.scriptfile.should eq "./my_script.sh"
   end
-  it "adds kind option to 'something'" do 
+  it "adds kind option to 'something'" do
     conf = Kemal.config
     Kemal::CLI.new ["-k", "something"]
     conf.kind.should eq "something"
