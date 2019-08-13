@@ -7,7 +7,6 @@
 * Fichier de configuration du service
   * JSON ?
   * TOML ?
-* Faire une page d'accueil pour le "GET" (même page que celle que j'utilise pour mon service de webhook)
 * Ajouter un titre personnalisé et une description personnalisée récupérée dans le fichier de configuration de l'outil
 * Mettre kemal dans un module Gachette
 * User-Agent de Kemal en "Gachette" (pour avoir X-Powered-By à "Gachette")
@@ -22,3 +21,4 @@
 
 * Afficher toutes les options manquantes d'un coup (si on a oublié plusieurs options)
 * Permettre d'utiliser des variables dans les commandes données à Gachette. Des variables qui utilisent certaines données de Gachette, par exemple le type de payload, le nom du projet, etc.
+* Utiliser `crystal tool format` pour remettre d'équerre le code

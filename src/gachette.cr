@@ -12,8 +12,8 @@ require "./payload.cr"
 ALLOWED_KINDS = ["gitea", "github", "gitlab"]
 
 # Homepage: display simple service homepage
-get "/" do
-  "J'ai la gachette facile !"
+get "/" do |env|
+  env.redirect "/index.html"
 end
 
 # payload process:
