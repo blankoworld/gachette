@@ -23,24 +23,27 @@ class Payload
   @kind : String
   @project : String = "unknown"
   @secret : String = ""
+  @content : String
   def initialize(req : HTTP::Request)
     # request kind
     request_kind = request_type(req.headers).to_s
     @kind = request_kind == "" ? "unknown" : request_kind
+    # content
+    @content = req.body.not_nil!.gets_to_end.to_s
     case @kind
       when "gitea"
-        gitea = Gitea::Payload.from_json(req.body.not_nil!)
+        gitea = Gitea::Payload.from_json(@content)
         @project = gitea.repository.full_name
         @secret = gitea.secret
       when "github"
-        github = Github::Payload.from_json(req.body.not_nil!)
+        github = Github::Payload.from_json(@content)
         @project =  github.repository.full_name
         hash = req.headers.fetch("X-Hub-Signature", "None")
         if hash != "None"
           @secret = hash.to_s
         end
       when "gitlab"
-        gitlab = Gitlab::Payload.from_json(req.body.not_nil!)
+        gitlab = Gitlab::Payload.from_json(@content)
         @project = gitlab.project.path_with_namespace
         token = req.headers.fetch("X-Gitlab-Token", "None")
         if token != "None"
@@ -62,6 +65,11 @@ class Payload
   # special secret from project
   def secret
     @secret
+  end
+
+  # payload content (body)
+  def content
+    @content
   end
 end
 
@@ -111,7 +119,8 @@ post "/" do |env|
   # Check secret
   given_secret = Kemal.config.secretkey
   if payload.kind == "github"
-    given_secret = "sha1=" + OpenSSL::HMAC.hexdigest(:sha1, Kemal.config.secretkey, env.request.body.to_s)
+    data = JSON.parse(payload.content).to_json
+    given_secret = "sha1=" + OpenSSL::HMAC.hexdigest(:sha1, Kemal.config.secretkey, data)
   end
   if payload.secret != given_secret
     log("ERROR: secret is '#{payload.secret}'. Expected: '#{given_secret}'")
