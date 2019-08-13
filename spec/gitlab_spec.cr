@@ -1,7 +1,7 @@
 require "./spec_helper.cr"
 require "../src/gitlab.cr"
 
-describe "Gitlab" do
+describe "Gitlab JSON" do
   it "repository name is mike/diaspora" do
     content = open_json_file("spec/push_gitlab.json")
     obj = Gitlab::Payload.from_json(content)
