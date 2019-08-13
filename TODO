@@ -12,9 +12,13 @@
 * Mettre kemal dans un module Gachette
 * User-Agent de Kemal en "Gachette" (pour avoir X-Powered-By à "Gachette")
 * Séparer les différents logs: commandes lancées et résultats dans un fichier de log. Et les "payload received" ou les "success" dans log()
+* option "-d" pour définir l'emplacement où exécuter le script (ou la commande)
+  * vérifier que le répertoire existe (sinon erreur)
+  * changer la variable PWD suffit?
+  * si scriptfile donné, vérifier que scriptfile est contenu dans le répertoire, et pas depuis là où on lance gachette
+* retourner les bons codes d'erreurs (500 si le moindre pépin)
 
 # Améliorations
 
-* Exploser le code principal en plusieurs fichiers (un pour Kemal config, un pour les routes, etc.)
 * Afficher toutes les options manquantes d'un coup (si on a oublié plusieurs options)
 * Permettre d'utiliser des variables dans les commandes données à Gachette. Des variables qui utilisent certaines données de Gachette, par exemple le type de payload, le nom du projet, etc.
