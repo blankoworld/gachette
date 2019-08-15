@@ -1,11 +1,28 @@
 require "spec"
 
 # spec_helper adds method to manipulate data easily in tests
+
+# Just open a file and give its content
 def open_json_file(name) : String
   file = File.new(name)
   content = file.gets_to_end || ""
   file.close
   content
+end
+
+# Reset Kemal new config. properties (from Gachette):
+# - kind
+# - namespace
+# - command
+# - scriptfile
+# - secretkey
+def reset_kemal_config
+  conf = Kemal.config
+  conf.kind = "github"
+  conf.namespace = "blankoworld/gachette"
+  conf.command = nil
+  conf.scriptfile = nil
+  conf.secretkey = ""
 end
 
 # Body content from an existing Github webhook
