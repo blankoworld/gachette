@@ -56,7 +56,7 @@ describe "Gachette URLs" do
 
     Kemal::CLI.new ["-k", "github", "-n", "blankoworld/gachette", "-c", "ls /"]
 
-    json_payload = GITHUB_BODY
+    json_payload = GITHUB_PAYLOAD
     post("/", HTTP::Headers{
       "content-type"      => "application/json",
       "Expect"            => "",

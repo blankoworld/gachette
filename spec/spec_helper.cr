@@ -26,7 +26,7 @@ def reset_kemal_config
 end
 
 # Body content from an existing Github webhook
-GITHUB_BODY = <<-'TEXT'
+GITHUB_PAYLOAD = <<-'TEXT'
 {
   "ref": "refs/heads/master",
   "before": "0e11d9b0c51417ffde29f21d5b753a06a6fe1147",

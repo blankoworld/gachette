@@ -57,7 +57,7 @@ describe "Payload object" do
       "X-GitHub-Event"    => "push",
       "X-Hub-Signature"   => "sha1=8cfbbbf7a0b7b8322519ac7fbf346ad9a9475236",
     }
-    body = GITHUB_BODY
+    body = GITHUB_PAYLOAD
     request = HTTP::Request.new(
       "POST",
       "/",
