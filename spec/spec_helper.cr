@@ -25,6 +25,35 @@ def reset_kemal_config
   conf.secretkey = ""
 end
 
+# Headers for GITEA payload tests
+GITEA_HEADERS = HTTP::Headers{
+  "User-Agent"        => "GiteaServer",
+  "Content-Type"      => "application/json",
+  "X-GitHub-Delivery" => "e905e09b-6b35-46b4-bba5-c6599d21ab33",
+  "X-GitHub-Event"    => "push",
+  "X-Gitea-Delivery"  => "e905e09b-6b35-46b4-bba5-c6599d21ab33",
+  "X-Gitea-Event"     => "push",
+  "X-Gogs-Delivery"   => "e905e09b-6b35-46b4-bba5-c6599d21ab33",
+  "X-Gogs-Event"      => "push             ",
+}
+
+# Headers for GITLAB payload tests
+GITLAB_HEADERS = HTTP::Headers{
+  "Content-Type"   => "application/json",
+  "X-Gitlab-Event" => "Push Hook",
+  "X-Gitlab-Token" => "mot2passe",
+}
+
+# Headers from an existing GITHUB webhook
+GITHUB_HEADERS = HTTP::Headers{
+  "content-type"      => "application/json",
+  "Expect"            => "",
+  "User-Agent"        => "GitHub-Hookshot/hashsah",
+  "X-GitHub-Delivery" => "691df212-bdb7-11e9-8119-fa2f1de358a6",
+  "X-GitHub-Event"    => "push",
+  "X-Hub-Signature"   => "sha1=8cfbbbf7a0b7b8322519ac7fbf346ad9a9475236",
+}
+
 # Body content from an existing Github webhook
 GITHUB_PAYLOAD = <<-'TEXT'
 {

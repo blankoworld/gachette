@@ -1,6 +1,5 @@
 # À faire
 
-* Tests pour l'envoi de demandes JSON au serveur Kemal
 * Utiliser "log" pour faire des log.info sur la détection github/gitlab/gitea
 * Fichier d'exemple pour lancer le service sous Alpine
 * Fichier d'exemple pour lancer le service à l'aide de systemd
