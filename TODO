@@ -21,3 +21,4 @@
 * Afficher toutes les options manquantes d'un coup (si on a oublié plusieurs options)
 * Permettre d'utiliser des variables dans les commandes données à Gachette. Des variables qui utilisent certaines données de Gachette, par exemple le type de payload, le nom du projet, etc.
 * Utiliser `crystal tool format` pour remettre d'équerre le code
+* Surcharger la page index.html pour une page personnalisée
