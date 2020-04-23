@@ -1,3 +1,11 @@
 language: crystal
+
+crystal:
+  - latest
+  - nightly
+
 env:
   - KEMAL_ENV=test
+
+script:
+  - crystal spec --verbose
