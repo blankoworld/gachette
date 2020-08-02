@@ -8,12 +8,13 @@ targets:
   gachette:
     main: src/gachette.cr
 
-crystal: 0.30.1
+crystal: 0.35.1
 
 dependencies:
   kemal:
     github: kemalcr/kemal
-    version: 0.26.0
+    commit: dfe7dca08f4c9a9456d6132af5f6b59fcd6865e4
+    #    version: 0.26.1
   spec-kemal:
     github: kemalcr/spec-kemal
     version: 0.5.0
