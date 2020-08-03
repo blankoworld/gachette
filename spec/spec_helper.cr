@@ -10,21 +10,6 @@ def open_json_file(name) : String
   content
 end
 
-# Reset Kemal new config. properties (from Gachette):
-# - kind
-# - namespace
-# - command
-# - scriptfile
-# - secretkey
-def reset_kemal_config
-  conf = Kemal.config
-  conf.kind = "github"
-  conf.namespace = "blankoworld/gachette"
-  conf.command = nil
-  conf.scriptfile = nil
-  conf.secretkey = ""
-end
-
 # Headers for GITEA payload tests
 GITEA_HEADERS = HTTP::Headers{
   "User-Agent"        => "GiteaServer",
@@ -34,7 +19,7 @@ GITEA_HEADERS = HTTP::Headers{
   "X-Gitea-Delivery"  => "e905e09b-6b35-46b4-bba5-c6599d21ab33",
   "X-Gitea-Event"     => "push",
   "X-Gogs-Delivery"   => "e905e09b-6b35-46b4-bba5-c6599d21ab33",
-  "X-Gogs-Event"      => "push             ",
+  "X-Gogs-Event"      => "push",
 }
 
 # Headers for GITLAB payload tests

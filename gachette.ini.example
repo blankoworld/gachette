@@ -1,0 +1,17 @@
+[The_name_I_want_for_the_project_in_gachette]
+service = github
+namespace = blankoworld/gachette
+key = quelquechose
+command = ls .
+
+[Another project]
+service = gitea
+namespace = gitea/webhooks
+key = 3gEsCfjlV2ugRwgpU#w1*WaW*wa4NXgGmpCfkbG3
+command = echo "coucou"
+
+[gitlab]
+service = gitlab
+namespace = mike/diaspora
+key = mot2passe
+command = ls .

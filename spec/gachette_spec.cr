@@ -10,39 +10,18 @@ describe "Gachette URLs" do
   end
 
   it "POST '/' with well-formed GITEA backend" do
-    # Trust me, you need configuration!
-    reset_kemal_config
-    conf = Kemal.config
-    conf.secretkey = "3gEsCfjlV2ugRwgpU#w1*WaW*wa4NXgGmpCfkbG3"
-
-    Kemal::CLI.new ["-k", "gitea", "-n", "gitea/webhooks", "-c", "ls /"]
-
     json_payload = open_json_file("spec/push_gitea.json")
     post("/", GITEA_HEADERS, json_payload)
     response.body.should eq("SUCCESS")
   end
 
   it "POST '/' with well-formed GITLAB backend" do
-    # Trust me, you need configuration!
-    reset_kemal_config
-    conf = Kemal.config
-    conf.secretkey = "mot2passe"
-
-    Kemal::CLI.new ["-k", "gitlab", "-n", "mike/diaspora", "-c", "ls /"]
-
     json_payload = open_json_file("spec/push_gitlab.json")
     post("/", GITLAB_HEADERS, json_payload)
     response.body.should eq("SUCCESS")
   end
 
   it "POST '/' with well-formed GITHUB backend" do
-    # Trust me, you need configuration!
-    reset_kemal_config
-    conf = Kemal.config
-    conf.secretkey = "quelquechose"
-
-    Kemal::CLI.new ["-k", "github", "-n", "blankoworld/gachette", "-c", "ls /"]
-
     post("/", GITHUB_HEADERS, GITHUB_PAYLOAD)
     response.body.should eq("SUCCESS")
   end

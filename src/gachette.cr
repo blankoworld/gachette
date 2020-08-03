@@ -35,33 +35,33 @@ post "/" do |env|
   # - check where to go (directory)
 
   # Stop process if no kind found
-  if !Kemal.config.kind
+  if !ALLOWED_KINDS.includes?(payload.kind)
     kinds = ALLOWED_KINDS.join(separator = " ")
-    log("ERROR: kind unknown: '#{Kemal.config.kind}'. Allowed: #{kinds}")
+    log("ERROR: kind unknown: '#{payload.kind}'. Allowed: #{kinds}")
+    # TODO: Error in JSON
     next
   end
 
-  # Check payload
-  if payload.kind != Kemal.config.kind.to_s
-    log("ERROR: payload is '#{payload.kind}'. Expected: '#{Kemal.config.kind}'.")
-    next
-  end
-
-  if payload.project != Kemal.config.namespace.to_s
-    log("ERROR: user namespace is '#{payload.project}'. Expected: '#{Kemal.config.namespace}'")
+  key = {service: payload.kind, namespace: payload.project}
+  if !Kemal.config.projects.has_key?(key)
+    log("WARNING: no corresponding project found for #{payload.kind} with #{payload.project} namespace.")
+    # TODO: Error in JSON
     next
   end
 
   log("[#{payload.project}]: payload received!")
+  project = Kemal.config.projects[key]
 
   # Check secret
-  given_secret = Kemal.config.secretkey
+  project_key = project["key"]? || ""
+  given_secret = project_key
   if payload.kind == "github"
     data = JSON.parse(payload.content).to_json
-    given_secret = "sha1=" + OpenSSL::HMAC.hexdigest(:sha1, Kemal.config.secretkey, data)
+    given_secret = "sha1=" + OpenSSL::HMAC.hexdigest(:sha1, project_key, data)
   end
   if payload.secret != given_secret
     log("ERROR: secret is '#{payload.secret}'. Expected: '#{given_secret}'")
+    # TODO: Error in JSON
     next
   end
 
@@ -70,13 +70,15 @@ post "/" do |env|
   command = nil
   args = [] of String
 
-  if Kemal.config.scriptfile
-    log("SCRIPT: #{Kemal.config.scriptfile}")
+  if project.has_key?("scriptfile")
+    scriptfile = project["scriptfile"]
+    log("SCRIPT: #{scriptfile}")
     command = "sh"
-    args << "-c" << Kemal.config.scriptfile.to_s
+    args << "-c" << scriptfile.to_s
   else
-    log("COMMAND: #{Kemal.config.command}")
-    command = Kemal.config.command.to_s
+    command = project["command"]
+    log("COMMAND: #{command}")
+    command = command.to_s
   end
 
   if args.size > 0
@@ -96,42 +98,21 @@ post "/" do |env|
 end
 
 # Start service as Kemal one
-# After having checked mandatories options
 Kemal.run do |config|
-  # miscellaneous initialization
-  config.secretkey = ENV["GACHETTE_KEY"] if ENV.has_key?("GACHETTE_KEY")
-
-  if kemal_env = ENV["KEMAL_ENV"]?
-    if kemal_env == "test"
-      config.kind = "github"
-      config.namespace = "blankoworld/gachette"
-      config.command = "echo \"Testing env. with github:blankoworld/gachette\""
-      config.secretkey = "mot2passe"
-    end
+  # Check configuration file: should exist and be loadable
+  configuration = Kemal.config.config
+  # Use gachette.ini.example for tests
+  if ENV["KEMAL_ENV"]? == "test" && configuration == Dir.new(Dir.current).path + "/gachette.ini"
+    configuration = Dir.new(Dir.current).path + "/gachette.ini.example"
+  end
+  if ! File.exists?(configuration)
+    raise "Configuration '#{configuration}' not found!"
   end
 
-  # secret key is mandatory!
-  if !config.secretkey || config.secretkey == ""
-    puts "GACHETTE_KEY environment variable is mandatory!"
-    exit (1)
-  end
-
-  # mandatories options
-  if !config.kind
-    puts "kind option missing!"
-    exit (1)
-  elsif !ALLOWED_KINDS.includes?(config.kind)
-    puts "`#{config.kind}` kind is not allowed! Use one of: #{ALLOWED_KINDS}"
-    exit (1)
-  end
-
-  if !config.namespace
-    puts "name option is missing!"
-    exit (1)
-  end
-
-  if !config.command && !config.scriptfile
-    puts "need something to run! Either a command or a scriptfile."
-    exit (1)
+  begin
+    config.projects = load_configuration(configuration)
+  rescue
+    raise "Loading '#{configuration}' failed!"
   end
 end
+# vim: ts=2 sw=2 et nu

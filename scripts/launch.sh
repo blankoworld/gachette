@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-KEMAL_ENV=production GACHETTE_KEY="quelquechose" bin/gachette -k github -n "blankoworld/gachette" -c "ls /"
+KEMAL_ENV=production bin/gachette -c gachette.ini.example

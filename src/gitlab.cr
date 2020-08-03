@@ -1,13 +1,11 @@
 require "json"
 
 class Gitlab::Project
-  JSON.mapping(
-    path_with_namespace: String,
-  )
+  include JSON::Serializable
+  property path_with_namespace : String
 end
 
 class Gitlab::Payload
-  JSON.mapping(
-    project: {type: Project, nilable: false},
-  )
+  include JSON::Serializable
+  property project : Project
 end
