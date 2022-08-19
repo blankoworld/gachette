@@ -4,6 +4,7 @@ require "kemal"
 class Kemal::Config
   @projects = Hash(NamedTuple(service: String, namespace: String), Hash(String, String)).new
   @config : String = Dir.new(Dir.current).path + "/gachette.ini"
+  @app_name = "Gachette"
 
   property projects,config
 

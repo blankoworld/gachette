@@ -8,15 +8,14 @@ targets:
   gachette:
     main: src/gachette.cr
 
-crystal: 0.35.1
+crystal: 1.5.0
 
 dependencies:
   kemal:
     github: kemalcr/kemal
-    commit: dfe7dca08f4c9a9456d6132af5f6b59fcd6865e4
-    #    version: 0.26.1
+    version: 1.2.0
   spec-kemal:
     github: kemalcr/spec-kemal
-    version: 0.5.0
+    version: 1.0.0
 
 license: MIT
