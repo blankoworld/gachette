@@ -13,7 +13,11 @@ RUN shards build --static --no-debug --release --production -v
 
 # Second stage to use result as a single layer image
 FROM scratch
+ENV KEMAL_ENV=production
 COPY --from=build /app/bin/gachette /bin/gachette
 COPY gachette.ini.example /etc/gachette.ini
+WORKDIR /opt
+COPY public/ /opt/public/
 ENTRYPOINT ["/bin/gachette", "-c", "/etc/gachette.ini"]
 CMD ["--help"]
+EXPOSE 3000
