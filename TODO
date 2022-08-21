@@ -15,6 +15,7 @@
   * changer la variable PWD suffit?
   * si scriptfile donné, vérifier que scriptfile est contenu dans le répertoire, et pas depuis là où on lance gachette
 * retourner les bons codes d'erreurs (500 si le moindre pépin)
+* git-chglog pour le CHANGELOG de l'application + Makefile pour ça
 
 # Améliorations
 
