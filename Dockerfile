@@ -19,5 +19,5 @@ COPY gachette.ini.example /etc/gachette.ini
 WORKDIR /opt
 COPY public/ /opt/public/
 ENTRYPOINT ["/bin/gachette", "-c", "/etc/gachette.ini"]
-CMD ["--help"]
+#CMD ["--help"]
 EXPOSE 3000
