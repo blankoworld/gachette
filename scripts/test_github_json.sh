@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 
-http localhost:3000 User-Agent:GitHub-Hookshot/hashsah X-Github-Event:push X-Hub-Signature:"sha1=4e81b0757a6a6100a0ba2b1f184f5c9a01fb5632" Content-Type:application/json <<< '{
+PORT=${GACHETTE_PORT:-3000}
+
+http localhost:${PORT} User-Agent:GitHub-Hookshot/hashsah X-Github-Event:push X-Hub-Signature:"sha1=4e81b0757a6a6100a0ba2b1f184f5c9a01fb5632" Content-Type:application/json <<< '{
   "ref": "refs/heads/master",
   "before": "31304113108556f646c4c2805e8a4567bb9cebac",
   "after": "cec4ef461a0ec631a7d118634ee3c1afd68537ce",

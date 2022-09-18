@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 
-http localhost:3000 User-Agent:GiteaServer X-Gitea-Event:push Content-Type:application/json <<< '{
+PORT=${GACHETTE_PORT:-3000}
+
+http localhost:${PORT} User-Agent:GiteaServer X-Gitea-Event:push Content-Type:application/json <<< '{
   "secret": "3gEsCfjlV2ugRwgpU#w1*WaW*wa4NXgGmpCfkbG3",
   "ref": "refs/heads/develop",
   "before": "28e1879d029cb852e4844d9c718537df08844e03",
