@@ -11,7 +11,7 @@ describe "Gachette URLs" do
 
   it "POST '/' with well-formed GITEA backend" do
     json_payload = open_json_file("spec/push_gitea.json")
-    post("/", GITEA_HEADERS, json_payload)
+    post("/", GITEA_HEADERS, GITEA_PAYLOAD)
     response.body.should eq("SUCCESS")
   end
 

@@ -2,8 +2,7 @@
 
 PORT=${GACHETTE_PORT:-3000}
 
-http localhost:${PORT} User-Agent:GiteaServer X-Gitea-Event:push Content-Type:application/json <<< '{
-  "secret": "3gEsCfjlV2ugRwgpU#w1*WaW*wa4NXgGmpCfkbG3",
+http localhost:${PORT} User-Agent:GiteaServer X-Gitea-Event:push X-Gitea-Signature:"e12c8c03be7a0f1249dbe91e0b1c494852d1194b067dca077de263b5a314dadc" Content-Type:application/json <<< '{
   "ref": "refs/heads/develop",
   "before": "28e1879d029cb852e4844d9c718537df08844e03",
   "after": "bffeb74224043ba2feb48d137756c8a9331c449a",

@@ -12,14 +12,14 @@ end
 
 # Headers for GITEA payload tests
 GITEA_HEADERS = HTTP::Headers{
-  "User-Agent"        => "GiteaServer",
   "Content-Type"      => "application/json",
-  "X-GitHub-Delivery" => "e905e09b-6b35-46b4-bba5-c6599d21ab33",
+  "X-GitHub-Delivery" => "f6266f16-1bf3-46a5-9ea4-602e06ead473",
   "X-GitHub-Event"    => "push",
-  "X-Gitea-Delivery"  => "e905e09b-6b35-46b4-bba5-c6599d21ab33",
-  "X-Gitea-Event"     => "push",
-  "X-Gogs-Delivery"   => "e905e09b-6b35-46b4-bba5-c6599d21ab33",
+  "X-Gogs-Delivery"   => "f6266f16-1bf3-46a5-9ea4-602e06ead473",
   "X-Gogs-Event"      => "push",
+  "X-Gitea-Delivery"  => "f6266f16-1bf3-46a5-9ea4-602e06ead473",
+  "X-Gitea-Event"     => "push",
+  "X-Gitea-Signature" => "d58246075b9c1ac31282034c565ec186ce229775572f5177086636d4c71d1c91",
 }
 
 # Headers for GITLAB payload tests
@@ -38,6 +38,77 @@ GITHUB_HEADERS = HTTP::Headers{
   "X-GitHub-Event"    => "push",
   "X-Hub-Signature"   => "sha1=8cfbbbf7a0b7b8322519ac7fbf346ad9a9475236",
 }
+
+# Body content from an existing Gitea webhook
+GITEA_PAYLOAD = <<-'TEXT'
+{
+  "ref": "refs/heads/develop",
+  "before": "28e1879d029cb852e4844d9c718537df08844e03",
+  "after": "bffeb74224043ba2feb48d137756c8a9331c449a",
+  "compare_url": "http://localhost:3000/gitea/webhooks/compare/28e1879d029cb852e4844d9c718537df08844e03...bffeb74224043ba2feb48d137756c8a9331c449a",
+  "commits": [
+    {
+      "id": "bffeb74224043ba2feb48d137756c8a9331c449a",
+      "message": "Webhooks Yay!",
+      "url": "http://localhost:3000/gitea/webhooks/commit/bffeb74224043ba2feb48d137756c8a9331c449a",
+      "author": {
+        "name": "Gitea",
+        "email": "someone@gitea.io",
+        "username": "gitea"
+      },
+      "committer": {
+        "name": "Gitea",
+        "email": "someone@gitea.io",
+        "username": "gitea"
+      },
+      "timestamp": "2017-03-13T13:52:11-04:00"
+    }
+  ],
+  "repository": {
+    "id": 140,
+    "owner": {
+      "id": 1,
+      "login": "gitea",
+      "full_name": "Gitea",
+      "email": "someone@gitea.io",
+      "avatar_url": "https://localhost:3000/avatars/1",
+      "username": "gitea"
+    },
+    "name": "webhooks",
+    "full_name": "gitea/webhooks",
+    "description": "",
+    "private": false,
+    "fork": false,
+    "html_url": "http://localhost:3000/gitea/webhooks",
+    "ssh_url": "ssh://gitea@localhost:2222/gitea/webhooks.git",
+    "clone_url": "http://localhost:3000/gitea/webhooks.git",
+    "website": "",
+    "stars_count": 0,
+    "forks_count": 1,
+    "watchers_count": 1,
+    "open_issues_count": 7,
+    "default_branch": "master",
+    "created_at": "2017-02-26T04:29:06-05:00",
+    "updated_at": "2017-03-13T13:51:58-04:00"
+  },
+  "pusher": {
+    "id": 1,
+    "login": "gitea",
+    "full_name": "Gitea",
+    "email": "someone@gitea.io",
+    "avatar_url": "https://localhost:3000/avatars/1",
+    "username": "gitea"
+  },
+  "sender": {
+    "id": 1,
+    "login": "gitea",
+    "full_name": "Gitea",
+    "email": "someone@gitea.io",
+    "avatar_url": "https://localhost:3000/avatars/1",
+    "username": "gitea"
+  }
+}
+TEXT
 
 # Body content from an existing Github webhook
 GITHUB_PAYLOAD = <<-'TEXT'

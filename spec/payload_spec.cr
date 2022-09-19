@@ -13,8 +13,8 @@ describe "Payload object" do
     )
     payload = Payload.new request
     payload.kind.should eq "gitea"
-    payload.content.should eq body
-    payload.secret.should eq "3gEsCfjlV2ugRwgpU#w1*WaW*wa4NXgGmpCfkbG3"
+    payload.content.should eq GITEA_PAYLOAD
+    payload.secret.should eq "d58246075b9c1ac31282034c565ec186ce229775572f5177086636d4c71d1c91"
     payload.project.should eq "gitea/webhooks"
   end
 
