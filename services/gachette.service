@@ -1,0 +1,14 @@
+[Unit]
+Description=Gachette webhooks service
+After=network.target
+
+[Service]
+Type=simple
+User=http
+WorkingDirectory=/srv/www/gachette
+ExecStart=/srv/www/gachette/gachette -c /etc/gachette.ini -b 0.0.0.0 -p 3000
+Environment="KEMAL_ENV=production"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
