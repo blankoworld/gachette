@@ -5,3 +5,4 @@
 *.dwarf
 /shard.lock
 gachette.ini
+gachette.production

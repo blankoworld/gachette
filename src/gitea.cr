@@ -8,5 +8,4 @@ end
 class Gitea::Payload
   include JSON::Serializable
   property repository : Repository
-  property secret : String
 end

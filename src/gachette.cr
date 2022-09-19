@@ -3,6 +3,7 @@ require "json"
 require "./gachette/helpers/*"
 require "openssl/hmac"
 require "openssl/sha1"
+require "openssl/digest"
 require "./payload.cr"
 
 # Gachette is a **webhook service for Gitlab, Github and Gitea** to launch
@@ -56,8 +57,13 @@ post "/" do |env|
   project_key = project["key"]? || ""
   given_secret = project_key
   if payload.kind == "github"
+    # Github a cette spécificité de vouloir les données en JSON
     data = JSON.parse(payload.content).to_json
     given_secret = "sha1=" + OpenSSL::HMAC.hexdigest(:sha1, project_key, data)
+  elsif payload.kind == "gitea"
+    # Gitea n'a besoin que du contenu de la requête envoyée
+    data = payload.content
+    given_secret = OpenSSL::HMAC.hexdigest(:sha256, project_key, data)
   end
   if payload.secret != given_secret
     log("ERROR: secret is '#{payload.secret}'. Expected: '#{given_secret}'")

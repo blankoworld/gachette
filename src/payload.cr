@@ -25,7 +25,10 @@ class Payload
     when "gitea"
       gitea = Gitea::Payload.from_json(@content)
       @project = gitea.repository.full_name
-      @secret = gitea.secret
+      hash = req.headers.fetch("X-Gitea-Signature", "None")
+      if hash != "None"
+        @secret = hash.to_s
+      end
     when "github"
       github = Github::Payload.from_json(@content)
       @project = github.repository.full_name
